@@ -6,14 +6,17 @@ import { makeRequest } from 'core/utils/request';
 import ProductCard from './components/ProductCard';
 import ProductCardLoader from './components/Loaders/ProductCardLoader';
 import './styles.scss';
+import Pagination from 'core/components/Pagination';
 
 const Catalog = () => {
   //popular estado do componente
   const [productsResponse, setProductsResponse] = useState<ProductsResponse>();
   const [isLoading, setIsLoading] = useState(false);
+  const [activePage, setActivePage] = useState(0);
+
   useEffect(() => {
     const params = {
-      page: 0,
+      page: activePage,
       linesPerPage: 12
     }
     //inciar loader
@@ -25,7 +28,7 @@ const Catalog = () => {
         //finaliza loader
         setIsLoading(false);
       });
-  }, []);
+  }, [activePage]);
 
   return (
     <div className="catalog-container">
@@ -41,6 +44,12 @@ const Catalog = () => {
           ))
         )}
       </div>
+      {productsResponse &&
+        <Pagination
+          totalPages={productsResponse.totalPages}
+          activePage={activePage}
+          onChange={page => setActivePage(page)}
+        />}
     </div>
   );
 }
