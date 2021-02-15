@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_product")
@@ -28,6 +29,7 @@ public class Product implements Serializable {
    @Column(columnDefinition = "TEXT")
    private String description;
    private Double price; 
+   @Size(min = 5, max = 10000, message = "campo deve ter entre 5 e 10000")
    private String imgUrl;
    
    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
