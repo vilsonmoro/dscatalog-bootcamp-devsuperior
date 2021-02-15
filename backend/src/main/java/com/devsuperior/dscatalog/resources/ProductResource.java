@@ -1,3 +1,4 @@
+
 package com.devsuperior.dscatalog.resources;
 
 import java.net.URI;
