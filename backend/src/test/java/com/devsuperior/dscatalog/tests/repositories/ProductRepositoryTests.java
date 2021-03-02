@@ -1,5 +1,7 @@
 package com.devsuperior.dscatalog.tests.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -8,9 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
+import com.devsuperior.dscatalog.tests.factory.ProductFactory;
 
 @DataJpaTest
 public class ProductRepositoryTests {
@@ -19,13 +24,62 @@ public class ProductRepositoryTests {
    
    private long existingId;
    private long nonExistingId;
+   private long countTotalProducts;
+   private long countPCGamerProducts;
+   private PageRequest pageRequest;
    
    @BeforeEach
    void setUp() throws Exception{
 	   existingId = 1L;
 	   nonExistingId = 1000L;
+	   countTotalProducts = 25L;
+	   countPCGamerProducts = 21L;
+	   pageRequest = PageRequest.of(0, 10);
    }
 	
+   @Test 
+   public void findShouldReturnAllProductsWhenNameIsEmpty() {
+	  String name = "";
+	  	  
+	  Page<Product> result = repository.find(null, name, pageRequest);
+	  
+	  Assertions.assertFalse(result.isEmpty());
+	  Assertions.assertEquals(countTotalProducts, result.getTotalElements());
+   }
+   
+   @Test 
+   public void findShouldReturnProductsWhenNameExistsIgnoringCase() {
+	  String name = "pc gamer";
+	  
+	  
+	  Page<Product> result = repository.find(null, name, pageRequest);
+	  
+	  Assertions.assertFalse(result.isEmpty());
+	  Assertions.assertEquals(countPCGamerProducts, result.getTotalElements());
+   }
+   
+   @Test 
+   public void findShouldReturnProductsWhenNameExists() {
+	  String name = "PC Gamer";
+	 	  
+	  Page<Product> result = repository.find(null, name, pageRequest);
+	  
+	  Assertions.assertFalse(result.isEmpty());
+	  Assertions.assertEquals(countPCGamerProducts, result.getTotalElements());
+   }
+   
+   @Test
+   public void saveShouldPersistWithAutoincrementIdIsNull() {
+	   Product product = ProductFactory.createProduct();
+	   product.setId(null);
+	   product = repository.save(product);
+	   
+	   Optional<Product> result = repository.findById(product.getId());
+	   Assertions.assertNotNull(product.getId());
+	  // Assertions.assertEquals(countTotalProducts + 1, product.getId());
+	   Assertions.assertSame(product, result.get());
+   }
+   
    @Test
    public void deleteShouldDeleteObjectWhenIdExists() {
 	   repository.deleteById(existingId);
@@ -37,7 +91,6 @@ public class ProductRepositoryTests {
    public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExists() {
 	  Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
 		  repository.deleteById(nonExistingId);
-	  });  
-	   
+	  });  	   
    }
 }
