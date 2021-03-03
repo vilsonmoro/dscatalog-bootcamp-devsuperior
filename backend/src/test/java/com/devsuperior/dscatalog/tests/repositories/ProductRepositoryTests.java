@@ -1,7 +1,7 @@
 package com.devsuperior.dscatalog.tests.repositories;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.tests.factory.ProductFactory;
@@ -25,6 +26,7 @@ public class ProductRepositoryTests {
    private long existingId;
    private long nonExistingId;
    private long countTotalProducts;
+   private long countCategory3Products;
    private long countPCGamerProducts;
    private PageRequest pageRequest;
    
@@ -34,8 +36,32 @@ public class ProductRepositoryTests {
 	   nonExistingId = 1000L;
 	   countTotalProducts = 25L;
 	   countPCGamerProducts = 21L;
+	   countCategory3Products = 23L;
 	   pageRequest = PageRequest.of(0, 10);
    }
+   
+   @Test 
+   public void findShouldReturnOnlySelectedCategoryWhenCategoryIsInformed() {
+	  List<Category> categories = new ArrayList<>();
+	  categories.add(new Category(3L, null));
+	  
+	  Page<Product> result = repository.find(categories, "", pageRequest);
+	  
+	  Assertions.assertFalse(result.isEmpty());
+	  Assertions.assertEquals(countCategory3Products, result.getTotalElements());
+   }
+   
+   
+   @Test 
+   public void findShouldReturnAllProductsWhenCategoryNotInformed() {
+	   List<Category> categories = null;
+	   
+	  Page<Product> result = repository.find(categories, "", pageRequest);
+	  
+	  Assertions.assertFalse(result.isEmpty());
+	  Assertions.assertEquals(countTotalProducts, result.getTotalElements());
+   }
+   
 	
    @Test 
    public void findShouldReturnAllProductsWhenNameIsEmpty() {
@@ -49,8 +75,7 @@ public class ProductRepositoryTests {
    
    @Test 
    public void findShouldReturnProductsWhenNameExistsIgnoringCase() {
-	  String name = "pc gamer";
-	  
+	  String name = "pc gamer";	  
 	  
 	  Page<Product> result = repository.find(null, name, pageRequest);
 	  
