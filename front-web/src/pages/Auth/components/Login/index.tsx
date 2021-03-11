@@ -26,8 +26,7 @@ const Login = () => {
             history.push("/admin");
         })
         .catch(() => {
-            setHasError(true);
-            
+            setHasError(true);            
         });
     }
 

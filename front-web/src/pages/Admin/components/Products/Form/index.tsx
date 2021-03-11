@@ -1,4 +1,4 @@
-import { makeRequest } from 'core/utils/request';
+import { makePrivateRequest } from 'core/utils/request';
 import React, { useState } from 'react';
 import BaseForm from '../../BaseForm';
 
@@ -23,19 +23,18 @@ const Form = () => {
     const handleOnChange = (event: FormEvent) => {
         const name = event.target.name;
         const value = event.target.value;
-        setFormData(data => ({ ...data, [name]: value }));//conserva o estado antigo e insere novo
-        console.log(formData);
+        setFormData(data => ({ ...data, [name]: value }));//conserva o estado antigo e insere novo        
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const payload = {
             ...formData,
-            imgUrl: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fgmedia.playstation.com%2Fis%2Fimage%2FSIEPDC%2Fps4-slim-image-block-01-en-24jul20%3F%24native--t%24&imgrefurl=https%3A%2F%2Fwww.playstation.com%2Fpt-br%2Fps4%2F&tbnid=HjUqDcNWTt-4sM&vet=12ahUKEwji8dvZ6-LuAhUyMbkGHTLtD10QMygAegUIARDrAQ..i&docid=gR7sUueKaqPhZM&w=600&h=600&hl=en&safe=active&ved=2ahUKEwji8dvZ6-LuAhUyMbkGHTLtD10QMygAegUIARDrAQ',
-            categories: [{ 'id': formData.category }]
+            imgUrl: 'https://tse1.explicit.bing.net/th?id=OIP.3kec-l7P_kbtmdryn4wn0QHaK4&pid=Api&P=0&w=300&h=300ya',
+            categories: [ formData.category ]
         }
 
-        makeRequest({ url: '/products', method: 'POST', data: payload })
+        makePrivateRequest({ url: '/products', method: 'POST', data: payload })
             .then(() => {
                 setFormData({ name: '', price: '', category: '', description: '' })
             });

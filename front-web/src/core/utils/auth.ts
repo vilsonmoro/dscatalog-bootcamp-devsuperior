@@ -10,5 +10,11 @@ type LoginResponse = {
 }
 //localStorage é um objeto do browser (aba application)
 export const saveSessionData = (loginResponse: LoginResponse) => {
-    localStorage.setItem('authdata', JSON.stringify(loginResponse));
+    localStorage.setItem('authData', JSON.stringify(loginResponse));
+}
+
+export const getSessionData = () => {
+    const sessionData = localStorage.getItem("authData") ?? '{}'; //operador de coalescencia
+    const parsedSessionData = JSON.parse(sessionData);
+    return parsedSessionData as LoginResponse; //casting
 }
