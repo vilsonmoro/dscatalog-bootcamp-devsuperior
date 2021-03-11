@@ -15,7 +15,7 @@ type RequestParams = {
    headers?: object;
 }
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:8080';
 
 export const makeRequest = ({method, url, data, params, headers}:RequestParams) => {
     return axios({
@@ -42,5 +42,5 @@ export const makeLogin = (loginData: LoginData) => {
     //yarn add @types/qs
 
     const payload = qs.stringify({...loginData, grant_type: 'password'});
-    makeRequest({url: '/oauth/token', data: payload, method: 'POST', headers})
+    return  makeRequest({url: '/oauth/token', data: payload, method: 'POST', headers})
 }

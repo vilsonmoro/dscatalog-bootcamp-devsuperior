@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ButtonIcon from 'core/components/ButtonIcon';
 import { Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
@@ -13,14 +13,26 @@ type FormData = {
 
 const Login = () => {
     const { register, handleSubmit } = useForm<FormData>();
+    const [hasError, setHasError] = useState(false);
     
     const onSubmit = (data: FormData) => {
         //chama a API
-        makeLogin(data);
+        makeLogin(data)
+        .then(response => {
+            setHasError(false)
+        })
+        .catch(() => {
+            setHasError(true);
+        });
     }
 
     return (
         <AuthCard title="Login">
+            {hasError && (
+                <div className="alert alert-danger">
+                    Usuário ou senha inválidos!
+                </div>
+            )}
             <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
                 <input 
                      type="email" 
