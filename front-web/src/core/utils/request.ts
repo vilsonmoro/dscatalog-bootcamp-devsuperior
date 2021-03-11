@@ -1,6 +1,7 @@
 import axios, { Method } from 'axios';
 import qs from 'qs';
 import { CLIENT_ID, CLIENT_SECRET, getSessionData } from './auth';
+import history from 'core/utils/history';
 
 type LoginData ={
     username: string;
@@ -16,6 +17,17 @@ type RequestParams = {
 }
 
 const BASE_URL = 'http://localhost:8080';
+
+//https://github.com/axios/axios#interceptors
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    return response;
+  }, function (error) {
+    if(error.response.status === 401)
+      history.push("/admin/auth/login");
+      return Promise.reject(error);
+  });
+
 
 export const makeRequest = ({method, url, data, params, headers}:RequestParams) => {
     return axios({
