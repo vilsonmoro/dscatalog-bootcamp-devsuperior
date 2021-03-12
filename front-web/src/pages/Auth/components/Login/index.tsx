@@ -42,7 +42,7 @@ const Login = () => {
                 <div className="margin-bottom-30">
                     <input 
                         type="email" 
-                        className="form-control input-base"
+                        className={`form-control input-base ${errors.username ? 'is-invalid' : '' }`}
                         placeholder="Email"
                         name="username"             
                         ref={register({
@@ -63,7 +63,7 @@ const Login = () => {
                 <div className="margin-bottom-30">
                     <input 
                         type="password" 
-                        className="form-control input-base"
+                        className={`form-control input-base ${errors.password ? 'is-invalid' : '' }`}
                         placeholder="Senha"
                         name="password"
                         ref={register({required: true})}
