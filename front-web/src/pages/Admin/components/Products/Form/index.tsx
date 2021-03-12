@@ -15,7 +15,7 @@ const Form = () => {
     const [formData, setFormData] = useState<FormState>({
         name: '',
         price: '',
-        category: '',
+        category: '1',
         description: ''
     });
 
@@ -36,7 +36,7 @@ const Form = () => {
 
         makePrivateRequest({ url: '/products', method: 'POST', data: payload })
             .then(() => {
-                setFormData({ name: '', price: '', category: '', description: '' })
+                setFormData({ name: '', price: '', category: '1', description: '' })
             });
     }
 

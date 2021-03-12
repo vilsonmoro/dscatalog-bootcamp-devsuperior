@@ -22,10 +22,11 @@ const BASE_URL = 'http://localhost:8080';
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
     return response;
-  }, function (error) {
-    if(error.response.status === 401)
-      history.push("/admin/auth/login");
-      return Promise.reject(error);
+  }, function (error) {     
+    if(error.response.status === 401){
+        history.push("/admin/auth/login");
+    } 
+    return Promise.reject(error);
   });
 
 
