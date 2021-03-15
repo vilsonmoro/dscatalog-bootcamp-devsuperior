@@ -1,3 +1,4 @@
+import { AssertionError } from "assert";
 import jwtDecode from "jwt-decode";
 export const CLIENT_ID = 'dscatalog';
 export const CLIENT_SECRET = 'dscatalog123'; 
@@ -34,8 +35,12 @@ export const getSessionData = () => {
 //yarn add @types/jwt-decode
 export const getAccessTokenDecoted = () => {
     const sessionData = getSessionData();
-    const tokenDecoded = jwtDecode(sessionData.access_token);
-    return tokenDecoded as AccessToken;
+    try{
+        const tokenDecoded = jwtDecode(sessionData.access_token);
+        return tokenDecoded as AccessToken;
+    } catch(error ){
+        return { } as AccessToken;
+    }
 }
 
 export const isTokenValid = () =>{
@@ -53,6 +58,7 @@ export const isAllowedByRole = (routeRoles: Role[] = []) => {
   if(routeRoles.length === 0){
       return true;
   }
+ 
   const  token = getAccessTokenDecoted();
-  return routeRoles.some(role => token.authorities.includes(role));
+  return routeRoles.some(role => token?.authorities?.includes(role));
 }
