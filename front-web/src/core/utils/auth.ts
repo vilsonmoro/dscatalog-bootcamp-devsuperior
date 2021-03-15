@@ -11,7 +11,7 @@ type LoginResponse = {
 }
 
 
-type Role = 'ROLE_OPERATOR' | 'ROLE-ADMIN';
+export type Role = 'ROLE_OPERATOR' | 'ROLE-ADMIN';
 
 type AccessToken = {
     exp: number;
@@ -49,4 +49,12 @@ export const isAuthenticated = () => {
      //"authData" no localStorage
     const sessionData = getSessionData();
     return sessionData.access_token && isTokenValid();
+}
+
+export const isAllowedByRole = (routeRoles: Role[] = []) => {
+  if(routeRoles.length === 0){
+      return true;
+  }
+  const {authorities } = getAccessTokenDecoted();
+  return routeRoles.some(role => authorities.includes(role));
 }

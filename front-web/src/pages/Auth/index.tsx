@@ -23,8 +23,7 @@ const Auth = () => (
 
              <Route path="/admin/auth/recover">
                  <h1>Recuperar</h1>
-             </Route>               
-
+             </Route>       
         </Switch>
       </div>
     </div>

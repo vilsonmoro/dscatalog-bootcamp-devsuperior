@@ -1,4 +1,3 @@
-import PrivateRoute from 'core/components/Routes/PrivateRoute';
 import history from 'core/utils/history';
 import Auth from 'pages/Auth';
 import React from 'react';
@@ -34,9 +33,9 @@ const Routes = () => (
              </Route>
 
              <Redirect from="/admin" to="/admin/products" exact/>
-             <PrivateRoute path="/admin">                 
+             <Route path="/admin">                 
                  <Admin />
-             </PrivateRoute>  
+             </Route>  
         </Switch>
     </Router>
 );
