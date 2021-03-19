@@ -5,17 +5,13 @@ import Form from './Form';
 
 const Products = () => {
     return (
-        <div>
-           
+        <div>           
             <Switch>
                 <Route path="/admin/products" exact>
                     <List />
                 </Route>
-                <Route path="/admin/products/create" >
+               <Route path="/admin/products/:productId">
                     <Form />
-                </Route>
-                <Route path="/admin/products/:productId">
-                    <h1>Consulta um produto</h1>
                 </Route>
             </Switch>
         </div>

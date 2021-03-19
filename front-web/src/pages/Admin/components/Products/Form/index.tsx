@@ -1,9 +1,9 @@
-import { makePrivateRequest } from 'core/utils/request';
-import React from 'react';
+import { makePrivateRequest, makeRequest } from 'core/utils/request';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import BaseForm from '../../BaseForm';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 
 type FormState = {
     name: string;
@@ -14,19 +14,41 @@ type FormState = {
 
 type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
 
+type ParamsType = {
+    productId: string;
+}
+
 const Form = () => {
-    const { register, handleSubmit, errors } = useForm<FormState>();
+    const { register, handleSubmit, errors, setValue } = useForm<FormState>();
     const history = useHistory();
+    const { productId } = useParams<ParamsType>();
+    const isEditing = productId !== 'create';
+
+    useEffect(() => {
+        if (isEditing) {
+            makeRequest({ url: `/products/${productId}` })
+                .then(response => {
+                    setValue('name', response.data.name);
+                    setValue('price', response.data.price);
+                    setValue('description', response.data.description);
+                    setValue('imgUrl', response.data.imgUrl);
+                });
+        }
+    }, [productId, isEditing, setValue]);
+
 
     const onSubmit = (data: FormState) => {
-        makePrivateRequest({ url: '/products', method: 'POST', data: data })
-        .then(() => {
-           toast.info('Produto cadastrado com sucesso');
-           history.push('/admin/products'); 
-        })
-        .catch(() => {
-            toast.error("Erro ao salvar produto.");
-        });
+        makePrivateRequest({ 
+            url: isEditing ? `/products/${productId}` : '/products', 
+            method: isEditing ? 'PUT' : 'POST', 
+            data: data })
+            .then(() => {
+                toast.info('Produto salvo com sucesso');
+                history.push('/admin/products');
+            })
+            .catch(() => {
+                toast.error("Erro ao salvar produto.");
+            });
     }
 
     return (
@@ -38,8 +60,8 @@ const Form = () => {
                             <input
                                 ref={register({
                                     required: "Campo obrigatório",
-                                    minLength: {value: 5, message: "O campo deve ter no mínimo 5 caracteres"},
-                                    maxLength: {value: 60, message: "O campo deve ter no máximo 60 caracteres"}
+                                    minLength: { value: 5, message: "O campo deve ter no mínimo 5 caracteres" },
+                                    maxLength: { value: 60, message: "O campo deve ter no máximo 60 caracteres" }
                                 })}
                                 name="name"
                                 type="text"
