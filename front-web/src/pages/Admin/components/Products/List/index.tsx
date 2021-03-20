@@ -11,7 +11,7 @@ const List = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [activePage, setActivePage] = useState(0);
 
-    const getProducts = useCallback(() =>{
+    const getProducts = useCallback(() => {
         const params = {
             page: activePage,
             linesPerPage: 4,
@@ -27,10 +27,10 @@ const List = () => {
                 //finaliza loader
                 setIsLoading(false);
             });
-    },[activePage]);
+    }, [activePage]);
 
     useEffect(() => {
-       getProducts();
+        getProducts();
     }, [getProducts]);
 
     const history = useHistory();
@@ -40,14 +40,19 @@ const List = () => {
     }
 
     const onRemove = (productId: number) => {
-        makePrivateRequest({ url: `/products/${productId}`, method:'DELETE' })
-            .then(() => {
-                toast.info('Produto removido com sucesso');
-                getProducts();
-               })
-            .catch(() => {
-                toast.error("Erro ao remover produto.");
-            });
+        const confirm = window.confirm('Deseja realmente exlcuir este produto');
+
+        if (confirm) {
+            makePrivateRequest({ url: `/products/${productId}`, method: 'DELETE' })
+                .then(() => {
+                    toast.info('Produto removido com sucesso');
+                    getProducts();
+                })
+                .catch(() => {
+                    toast.error("Erro ao remover produto.");
+                });
+        }
+
     }
 
     return (
