@@ -23,6 +23,7 @@ const Form = () => {
     const history = useHistory();
     const { productId } = useParams<ParamsType>();
     const isEditing = productId !== 'create';
+    const formTitle = isEditing ? "EDITAR UM PRODUTO" : "CADASTRAR UM PRODUTO";
 
     useEffect(() => {
         if (isEditing) {
@@ -53,7 +54,9 @@ const Form = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <BaseForm title="cadastrar um produto">
+            <BaseForm 
+                title={formTitle}
+                >
                 <div className="row">
                     <div className="col-6">
                         <div className="margin-bottom-30">
