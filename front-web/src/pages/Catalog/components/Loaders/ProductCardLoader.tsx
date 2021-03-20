@@ -27,6 +27,4 @@ const ProductCardLoader = () => {
     );
 }
 
-
-
 export default ProductCardLoader

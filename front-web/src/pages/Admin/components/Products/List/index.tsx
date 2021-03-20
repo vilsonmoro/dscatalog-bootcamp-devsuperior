@@ -1,6 +1,7 @@
 import Pagination from 'core/components/Pagination';
 import { ProductsResponse } from 'core/types/Product';
 import { makePrivateRequest, makeRequest } from 'core/utils/request';
+import CardLoader from 'pages/Catalog/components/Loaders/CardLoader';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -51,7 +52,7 @@ const List = () => {
                 .catch(() => {
                     toast.error("Erro ao remover produto.");
                 });
-        }
+            }
 
     }
 
@@ -61,13 +62,15 @@ const List = () => {
                 ADICIONAR
            </button>
             <div className="admin-list-container">
-                {productsResponse?.content.map(product => (
-                    <Card
-                        product={product}
-                        key={product.id}
-                        onRemove={onRemove}
-                    />
-                ))}
+               {isLoading ? <CardLoader /> : (
+                    productsResponse?.content.map(product => (
+                        <Card
+                            product={product}
+                            key={product.id}
+                            onRemove={onRemove}
+                        />
+                    ))
+               )}
             </div>
             {productsResponse &&
                 <Pagination

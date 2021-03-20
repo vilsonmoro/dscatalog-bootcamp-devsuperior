@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Product, ProductsResponse } from 'core/types/Product';
 import ProductPrice from 'pages/Catalog/components/ProductPrice';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,6 @@ type Props = {
 }
 
 const Card = ({ product, onRemove }: Props) => {
-
     return (
         <div className="card-base product-card-admin">
             <div className="row">
