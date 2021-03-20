@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import BaseForm from '../../BaseForm';
 import { toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router';
+import Select from 'react-select';
+import './styles.scss';
 
 type FormState = {
     name: string;
@@ -17,6 +19,12 @@ type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTe
 type ParamsType = {
     productId: string;
 }
+
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
 
 const Form = () => {
     const { register, handleSubmit, errors, setValue } = useForm<FormState>();
@@ -92,7 +100,13 @@ const Form = () => {
                                 </div>
                             )}
                         </div>
-
+                        <div className="margin-bottom-30">
+                            <Select 
+                              options={options}
+                              classNamePrefix="categories-select"
+                              placeholder="Categoria"
+                            />
+                        </div>
                         <div className="margin-bottom-30">
                             <input
                                 ref={register({ required: "Campo obrigatório" })}

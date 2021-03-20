@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Product, ProductsResponse } from 'core/types/Product';
+import React from 'react';
+import { Product } from 'core/types/Product';
 import ProductPrice from 'pages/Catalog/components/ProductPrice';
 import { Link } from 'react-router-dom';
 import './styles.scss';

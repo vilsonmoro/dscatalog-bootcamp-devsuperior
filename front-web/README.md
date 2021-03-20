@@ -47,3 +47,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 Mostrar mensagem ao usuário
 https://github.com/fkhadra/react-toastify
+
+
+Componente select
+http://react-select.com
+
+yarn add react-select
+yarn add @types/react-select
