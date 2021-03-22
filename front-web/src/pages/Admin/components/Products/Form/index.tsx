@@ -1,11 +1,12 @@
 import { makePrivateRequest, makeRequest } from 'core/utils/request';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import BaseForm from '../../BaseForm';
 import { toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router';
 import Select from 'react-select';
 import './styles.scss';
+import { Category } from 'core/types/Product';
 
 type FormState = {
     name: string;
@@ -20,18 +21,21 @@ type ParamsType = {
     productId: string;
 }
 
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
-
 const Form = () => {
     const { register, handleSubmit, errors, setValue } = useForm<FormState>();
     const history = useHistory();
     const { productId } = useParams<ParamsType>();
+    const [ categories, setCategories] = useState<Category[]>([]);
+    const [isLoadingCategories, setIsLoadCategories] = useState(false);
     const isEditing = productId !== 'create';
     const formTitle = isEditing ? "EDITAR UM PRODUTO" : "CADASTRAR UM PRODUTO";
+
+    useEffect(() => {
+        setIsLoadCategories(false)
+        makeRequest({ url: '/categories'})
+        .then(response => setCategories(response.data.content))
+        .finally(() => setIsLoadCategories(false))       
+    },[]);
 
     useEffect(() => {
         if (isEditing) {
@@ -102,7 +106,9 @@ const Form = () => {
                         </div>
                         <div className="margin-bottom-30">
                             <Select 
-                              options={options}
+                              options={ categories } 
+                              getOptionLabel={(option: Category) => option.name}
+                              getOptionValue={(option: Category) => String(option.id)}
                               classNamePrefix="categories-select"
                               placeholder="Categoria"
                             />
