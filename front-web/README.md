@@ -54,3 +54,6 @@ http://react-select.com
 
 yarn add react-select
 yarn add @types/react-select
+
+React Currency input-field
+https://github.com/cchanxzy/react-currency-input-field
