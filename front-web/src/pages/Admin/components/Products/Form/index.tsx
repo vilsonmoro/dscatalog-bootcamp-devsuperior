@@ -1,6 +1,6 @@
 import { makePrivateRequest, makeRequest } from 'core/utils/request';
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import BaseForm from '../../BaseForm';
 import { toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router';
@@ -13,6 +13,7 @@ type FormState = {
     price: string;
     description: string;
     imgUrl: string;
+    categories: Category[];
 }
 
 type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
@@ -22,7 +23,7 @@ type ParamsType = {
 }
 
 const Form = () => {
-    const { register, handleSubmit, errors, setValue } = useForm<FormState>();
+    const { register, handleSubmit, errors, setValue, control } = useForm<FormState>();
     const history = useHistory();
     const { productId } = useParams<ParamsType>();
     const [ categories, setCategories] = useState<Category[]>([]);
@@ -45,6 +46,7 @@ const Form = () => {
                     setValue('price', response.data.price);
                     setValue('description', response.data.description);
                     setValue('imgUrl', response.data.imgUrl);
+                    setValue('categories', response.data.categories);
                 });
         }
     }, [productId, isEditing, setValue]);
@@ -105,13 +107,24 @@ const Form = () => {
                             )}
                         </div>
                         <div className="margin-bottom-30">
-                            <Select 
+                            <Controller
+                              name="categories"
+                              rules={{required: true}}
+                              control={ control }
+                              isLoading={isLoadingCategories}
+                              as={Select}
                               options={ categories } 
                               getOptionLabel={(option: Category) => option.name}
                               getOptionValue={(option: Category) => String(option.id)}
                               classNamePrefix="categories-select"
                               placeholder="Categoria"
+                              isMulti
                             />
+                            {errors.categories && (
+                                <div className="invalid-feedback d-block">
+                                    Campo obrigatório
+                                </div>
+                            )}
                         </div>
                         <div className="margin-bottom-30">
                             <input
@@ -135,7 +148,7 @@ const Form = () => {
                                 ref={register({ required: "Campo obrigatório" })}
                                 cols={30}
                                 rows={10}
-                                placeholder="Descrição"
+                                placeholder="Descrição"                            
                             />
                             {errors.description && (
                                 <div className="invalid-feedback d-block">
