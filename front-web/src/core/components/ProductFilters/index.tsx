@@ -5,9 +5,19 @@ import { Category } from 'core/types/Product';
 import { makeRequest } from 'core/utils/request';
 import Select from 'react-select';
 
-const ProductFilters = () => {
+export type FilterForm = {
+    name?: string;
+    categoryId?: number;
+  }
+  
+  type Props = {
+    onSearch: (filter: FilterForm) => void;
+  }
+
+const ProductFilters = ({ onSearch }: Props) => {
     const [ categories, setCategories] = useState<Category[]>([]);
     const [isLoadingCategories, setIsLoadCategories] = useState(false);
+    const [name, setName] = useState('');
     
     useEffect(() => {
         setIsLoadCategories(false)
@@ -16,12 +26,19 @@ const ProductFilters = () => {
         .finally(() => setIsLoadCategories(false))       
     },[]);
 
+    const handleChangeName = (name: string) => {
+          setName(name);
+          onSearch({name});
+    }
+
     return (
         <div className="card-base product-filters-container">
             <div className="input-search">
                 <input type="text"
                     className="form-control"
                     placeholder="Pesquisar produto"
+                    value={name}
+                    onChange={ event => handleChangeName(event.target.value )}
                 />
                 <SearchIcon />
             </div>

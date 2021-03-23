@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductsResponse } from 'core/types/Product';
 import { makeRequest } from 'core/utils/request';
@@ -7,7 +7,8 @@ import ProductCard from './components/ProductCard';
 import ProductCardLoader from './components/Loaders/ProductCardLoader';
 import './styles.scss';
 import Pagination from 'core/components/Pagination';
-import ProductFilters from 'core/components/ProductFilters';
+import ProductFilters, { FilterForm } from 'core/components/ProductFilters';
+
 
 const Catalog = () => {
   //popular estado do componente
@@ -15,10 +16,12 @@ const Catalog = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(0);
 
-  useEffect(() => {
+  const getProducts = useCallback((filter?: FilterForm) => {
     const params = {
       page: activePage,
-      linesPerPage: 12
+      linesPerPage: 12,
+      name: filter?.name,
+      categoryId: filter?.categoryId
     }
     //inciar loader
     setIsLoading(true);
@@ -29,7 +32,11 @@ const Catalog = () => {
         //finaliza loader
         setIsLoading(false);
       });
-  }, [activePage]);
+  },[activePage]);
+
+  useEffect(() => {
+     getProducts();
+  }, [getProducts]);
 
   return (
     <div className="catalog-container">
@@ -37,7 +44,7 @@ const Catalog = () => {
         <h1 className="catalog-title">
           Catálogo de produtos
       </h1>
-        <ProductFilters />
+        <ProductFilters onSearch={filter => getProducts(filter) } />
       </div>
 
       <div className="catalog-products">
