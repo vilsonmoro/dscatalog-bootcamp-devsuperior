@@ -29,6 +29,9 @@ const Form = () => {
     const history = useHistory();
     const { productId } = useParams<ParamsType>();
     const [ categories, setCategories] = useState<Category[]>([]);
+    const [ uploadedImgUrl, setUploadedImgUrl] = useState("");
+    const [ productImgUrl, setProductImgUrl] = useState("");
+
     const [isLoadingCategories, setIsLoadCategories] = useState(false);
     const isEditing = productId !== 'create';
     const formTitle = isEditing ? "EDITAR UM PRODUTO" : "CADASTRAR UM PRODUTO";
@@ -46,19 +49,23 @@ const Form = () => {
                 .then(response => {
                     setValue('name', response.data.name);
                     setValue('price', response.data.price);
-                    setValue('description', response.data.description);
-                    setValue('imgUrl', response.data.imgUrl);
+                    setValue('description', response.data.description);                   
                     setValue('categories', response.data.categories);
+                    setProductImgUrl(response.data.imgUrl);
                 });
         }
     }, [productId, isEditing, setValue]);
 
 
     const onSubmit = (data: FormState) => {
+        const payload = {
+            ...data,
+            imgUrl: uploadedImgUrl
+        }
         makePrivateRequest({ 
             url: isEditing ? `/products/${productId}` : '/products', 
             method: isEditing ? 'PUT' : 'POST', 
-            data: data })
+            data: payload })
             .then(() => {
                 toast.info('Produto salvo com sucesso');
                 history.push('/admin/products');
@@ -66,6 +73,9 @@ const Form = () => {
             .catch(() => {
                 toast.error("Erro ao salvar produto.");
             });
+    }
+    const onUpLoadSuccess = (imgUrl: string) => {
+        setUploadedImgUrl(imgUrl);
     }
 
     return (
@@ -125,7 +135,9 @@ const Form = () => {
                             )}
                         </div>
                         <div className="margin-bottom-30">
-                           <ImageUpload />   
+                           <ImageUpload 
+                               onUpLoadSuccess={onUpLoadSuccess}
+                               productImgUrl={ productImgUrl }/>   
                         </div>
                     </div>
                     
