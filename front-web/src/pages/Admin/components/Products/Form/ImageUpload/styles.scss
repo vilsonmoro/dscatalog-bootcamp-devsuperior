@@ -16,3 +16,24 @@
     line-height: 19px;
     letter-spacing: -0.015em;
 }
+
+.upload-placeholder{
+  .upload-progress-container{
+      position: absolute;
+      bottom: 10px;
+      left: 25px;
+      height: 10px;
+      background: #e1e1e1;
+      width: 175px;
+      border-radius: 10px;
+
+  }
+
+  .upload-progress{
+      height: 10px;
+      background: #407bff;
+      border-radius: 10px;
+      width: 50%;
+  }
+
+}
