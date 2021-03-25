@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Category, ProductsResponse } from 'core/types/Product';
 import { makeRequest } from 'core/utils/request';

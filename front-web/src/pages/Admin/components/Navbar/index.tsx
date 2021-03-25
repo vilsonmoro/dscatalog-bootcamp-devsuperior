@@ -1,6 +1,5 @@
-
-import { isAllowedByRole } from 'core/utils/auth';
 import React from 'react';
+import { isAllowedByRole } from 'core/utils/auth';
 import { NavLink } from 'react-router-dom';
 import './styles.scss';
 
