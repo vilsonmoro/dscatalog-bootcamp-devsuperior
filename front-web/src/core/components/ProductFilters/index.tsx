@@ -18,6 +18,7 @@ const ProductFilters = ({ onSearch }: Props) => {
     const [ categories, setCategories] = useState<Category[]>([]);
     const [isLoadingCategories, setIsLoadCategories] = useState(false);
     const [name, setName] = useState('');
+    const [ category, setCategory ] = useState<Category>();
     
     useEffect(() => {
         setIsLoadCategories(false)
@@ -28,7 +29,19 @@ const ProductFilters = ({ onSearch }: Props) => {
 
     const handleChangeName = (name: string) => {
           setName(name);
-          onSearch({name});
+          onSearch({name , categoryId: category?.id});
+    }
+
+    const handleChangeCategory = (category: Category) => {
+        setCategory(category);
+        onSearch({name , categoryId: category?.id});
+    }
+
+    const clearFilters = () => {
+        setCategory(undefined);
+        setName('');
+        onSearch({name: '' , categoryId: undefined});
+
     }
 
     return (
@@ -52,8 +65,13 @@ const ProductFilters = ({ onSearch }: Props) => {
                 className="filter-select-container"
                 classNamePrefix="product-categories-select"
                 placeholder="Categoria"
+                onChange={value => handleChangeCategory(value as Category)}
+                value={category}
+                key={`select-${category?.id}`}
             />
-            <button className="btn btn-outline-secondary border-radius-10">
+            <button 
+            className="btn btn-outline-secondary border-radius-10"
+            onClick={clearFilters}>
                 LIMPAR FILTRO
             </button>
         </div>
