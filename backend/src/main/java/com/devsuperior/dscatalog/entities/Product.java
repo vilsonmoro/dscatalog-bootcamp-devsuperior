@@ -29,7 +29,9 @@ public class Product implements Serializable {
    @Column(columnDefinition = "TEXT")
    private String description;
    private Double price; 
+   
    @Size(min = 5, max = 10000, message = "campo deve ter entre 5 e 10000")
+   @Column(columnDefinition = "TEXT")
    private String imgUrl;
    
    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")

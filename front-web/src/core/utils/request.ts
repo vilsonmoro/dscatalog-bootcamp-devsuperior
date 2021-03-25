@@ -8,8 +8,8 @@ type LoginData ={
     password: string;
 }
 
-
-const BASE_URL = 'http://localhost:8080';
+//const BASE_URL = 'https://vilson-dscatalog.herokuapp.com/'
+const BASE_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
 
 //https://github.com/axios/axios#interceptors
 // Add a response interceptor
