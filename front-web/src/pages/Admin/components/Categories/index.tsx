@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router';
+import Form from './Form';
 import ListCategories from './List';
 
 const Categories = () => {
@@ -10,7 +11,7 @@ const Categories = () => {
                     <ListCategories />
                 </Route>
                <Route path="/admin/categories/:categoryId">
-                    Form
+                    <Form />
                 </Route>
             </Switch>
         </div>
