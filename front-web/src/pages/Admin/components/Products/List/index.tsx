@@ -1,5 +1,6 @@
 import Pagination from 'core/components/Pagination';
-import { ProductsResponse } from 'core/types/Product';
+import ProductFilters from 'core/components/ProductFilters';
+import { Category, ProductsResponse } from 'core/types/Product';
 import { makePrivateRequest, makeRequest } from 'core/utils/request';
 import CardLoader from 'pages/Catalog/components/Loaders/CardLoader';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -11,13 +12,17 @@ const List = () => {
     const [productsResponse, setProductsResponse] = useState<ProductsResponse>();
     const [isLoading, setIsLoading] = useState(false);
     const [activePage, setActivePage] = useState(0);
+    const [name, setName] = useState('');
+    const [ category, setCategory ] = useState<Category>();
 
     const getProducts = useCallback(() => {
         const params = {
             page: activePage,
             linesPerPage: 4,
             direction: 'DESC',
-            orderBy: 'id'
+            orderBy: 'id',
+            name: name,
+            categoryId: category?.id
         }
         //inciar loader
         setIsLoading(true);
@@ -28,7 +33,7 @@ const List = () => {
                 //finaliza loader
                 setIsLoading(false);
             });
-    }, [activePage]);
+    }, [activePage,  name, category]);
 
     useEffect(() => {
         getProducts();
@@ -52,17 +57,43 @@ const List = () => {
                 .catch(() => {
                     toast.error("Erro ao remover produto.");
                 });
-            }
+        }
 
     }
 
-    return (
+    const handleChangeName = (name: string) => {
+        setName(name);   
+        setActivePage(0);
+      }
+    
+      const handleChangeCategory = (category: Category) => {
+        setCategory(category); 
+        setActivePage(0); 
+      }
+    
+      const clearFilters = () => {
+        setCategory(undefined);
+        setName('');
+        setActivePage(0);
+      }
+
+      return (
         <div className="admin-products-list">
-            <button className="btn btn-primary btn-lg" onClick={handleCreate} >
-                ADICIONAR
-           </button>
+            <div className="d-flex justify-content-between margin-bottom-40">
+                <button className="btn btn-primary btn-lg" onClick={handleCreate} >
+                    ADICIONAR
+                </button>
+                <ProductFilters
+                    name={name}
+                    category={category}
+                    handleChangeCategory={handleChangeCategory}
+                    handleChangeName={handleChangeName}
+                    clearFilters={clearFilters}
+                />
+            </div>
+
             <div className="admin-list-container">
-               {isLoading ? <CardLoader /> : (
+                {isLoading ? <CardLoader /> : (
                     productsResponse?.content.map(product => (
                         <Card
                             product={product}
@@ -70,7 +101,7 @@ const List = () => {
                             onRemove={onRemove}
                         />
                     ))
-               )}
+                )}
             </div>
             {productsResponse &&
                 <Pagination
