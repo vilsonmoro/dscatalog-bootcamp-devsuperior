@@ -3,6 +3,12 @@ export type ProductsResponse = {
     totalPages: number;
 }
 
+export type CategoriesResponse = {
+    content: Category[];
+    totalPages: number;
+}
+
+
 export type Product = {
     id: number;
     name: string;
